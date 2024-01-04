@@ -28,7 +28,7 @@
 - バックエンド: Flask(python)
 - その他の技術: Docker(& Docker Compose), Nginx（リバースプロキシのために利用）
 
-![スクリーンショット 2024-01-05 1.22.15.png](Payment%20Processing%20Application%20b1690060fd79489eafcf1f39141ad5e6/%25E3%2582%25B9%25E3%2582%25AF%25E3%2583%25AA%25E3%2583%25BC%25E3%2583%25B3%25E3%2582%25B7%25E3%2583%25A7%25E3%2583%2583%25E3%2583%2588_2024-01-05_1.22.15.png)
+![システム構成図](https://github.com/KeishiNishio/CreditcardAuthorization/blob/master/system_image.png)
 
 システム構成図
 
