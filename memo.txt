@@ -1,0 +1,13 @@
+つまった点。
+nginx/default.conf内    
+    proxy_pass の URL にトレーリングスラッシュ（/）を追加することで、
+    Nginx は /api の部分を取り除いたリクエストをバックエンドに転送できる
+    つまり、/api/osaka へのリクエストは /osaka としてバックエンドに転送されるため、
+    Flask アプリケーションが正しく応答できるようになる
+    修正前：
+        location /api {
+        proxy_pass http://api:8080;
+            ↓↓↓↓↓
+    修正後：
+        location /api/ {
+        proxy_pass http://api:8080/;

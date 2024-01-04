@@ -1,0 +1,27 @@
+project-root/
+│
+├── backend/
+│   ├── Dockerfile
+│   ├── app.py
+│   └── requirements.txt
+│
+├── frontend/
+│   ├── build/
+│   ├── node_modules/
+│   ├── public/
+│   │    └── index.html
+│   ├── src/
+│   │    ├── App.js
+│   │    ├── index.css
+│   │    └── index.js
+│   │   
+│   ├── Dockerfile
+│   ├── package-lock.json
+│   └── package.json
+│   
+├── nginx/
+│   └── default.conf
+│
+├── conposition.txt
+├── docker-compose.yml
+└── README.md
