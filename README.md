@@ -60,12 +60,7 @@ The system consists of three main servers: backend, frontend, and nginx, each wi
 
 ## Setup Instructions
 
-1. Clone the repository:
-
-```bash
-git clone <https://github.com/your-username/your-repository-name.git>
-```
-
+1. Clone this repository
 2. Create a Docker network:
 
 ```bash
