@@ -2,186 +2,162 @@
 
 ---
 
-## 概要
+## Overview
 
-このリポジトリは、ReactフロントエンドとFlaskバックエンドを組み合わせた支払い処理Webアプリケーションです。ユーザーはフォームにID、カードの有効期限、支払い額を入力し、承認願いを通知します。支払いが承認されると、確認ボタンが表示され、支払い額が確定し、請求されるという仕組みになっています。また、挙動の確認のために、利用可能額と請求額を確認する機能も追加しています。
+This repository hosts a web application for payment processing, combining a React frontend with a Flask backend. Users can input their ID, card expiration date, and payment amount in a form and send an authorization request. Upon approval, a confirmation button is displayed, finalizing and charging the payment amount. The system also includes features to check available credit and billed amounts, aimed at better understanding the credit card payment process, which, despite its frequent use in daily life, remains complex and obscure to many. This implementation focuses on the authorization process, validating transaction legitimacy and credit card approval. By understanding these steps, one gains insights into security and transaction efficiency. Additionally, Docker is utilized for system construction, offering a hands-on learning experience with container technology.
 
-このシステムを実装した主な動機は、クレジットカード決済のプロセスをより深く理解することです。日常生活で頻繁に使用しているにも関わらず、その背後にある複雑なメカニズムは多くの人はわからない状態だと思います。具体的には、オーソリゼーション処理、つまり取引の正当性を確認し、支払いが承認されるまでの一連のステップに焦点を当てました。これを理解することで、セキュリティや取引の効率性についての知識を深めることができます。さらに、Dockerを使用してシステムを構築することで、コンテナ技術を実際に手を動かしながら学ぶためです。
+### **About Authorization**
 
-### **オーソリゼーションについて**
+In simple terms, the authorization process checks if a credit card can be used, following these steps:
 
-ざっくり説明すると、オーソリゼーション処理とはクレジットカードが利用できるかどうかを確認する処理で以下のような手順によって、検証されています。
+1. **At Purchase**: The user buys products or services at a merchant and considers credit card payment.
+2. **Authorization Request**: The merchant sends the customer's credit card information and purchase amount to the credit card company for authorization.
+3. **Approval Process**: The credit card company checks the card's validity, expiration, and credit limit to decide on the transaction's legitimacy.
+4. **Authorization Response**: If approved, an authorization code is sent to the merchant. If denied, reasons are provided.
+    1. This implementation focuses on checking:
+        1. **Credit card validity (correct ID number)**
+        2. **Non-expiration**
+        3. **Credit limit overruns**
+5. **Settlement**: Upon approval, the merchant finalizes the amount, notifies the credit card company, and the final billing to the user occurs (updated in the next month's bill).
 
-1. **購入時：**ユーザが加盟店で商品やサービスを購入し、クレジットカードでの支払いを検討
-2. **オーソリゼーション要求**: 加盟店は、顧客のクレジットカード情報と購入金額をクレジットカード会社に送信し、オーソリゼーションをリクエスト
-3. **承認プロセス**: クレジットカード会社は、カードの有効性、有効期限、限度額内であるかどうかを確認し、取引が正当かどうかを判断
-4. **オーソリゼーション応答**: 承認が下りれば、オーソリゼーションコードとともに加盟店に承認応答が通知。承認拒否の場合は、その理由が通知
-    1. 今回の実装では、以下を確認する機能のみ実装した
-        1. **クレジットカードの有効性（ID番号が正当かどうか）**
-        2. **有効期限切れでないかどうか**
-        3. **利用可能限度額を超過していないかどうか**
-5. **決済**: 承認された場合、加盟店側で決済金額を確定後、クレジットカード会社側に通知され、決済確定処理が行われ、最終的にユーザに請求がなされる。（翌月の請求額の更新）
+## Technology Stack
 
-## 技術スタック
+- Frontend: React (JavaScript)
+- Backend: Flask (Python)
+- Other Technologies: Docker (& Docker Compose), Nginx (for reverse proxy)
 
-- フロントエンド: React(java srcipt),~~html,css~~
-- バックエンド: Flask(python)
-- その他の技術: Docker(& Docker Compose), Nginx（リバースプロキシのために利用）
+![System Architecture Diagram](https://github.com/KeishiNishio/CreditcardAuthorization/blob/master/system_image.png)
 
-![システム構成図](https://github.com/KeishiNishio/CreditcardAuthorization/blob/master/system_image.png)
+System Architecture Diagram
 
-システム構成図
+## Features
 
-## 機能
+- Sending payment information
+- Approval and confirmation of payments
+- Checking available and billed amounts
 
-- 支払い情報の送信
-- 支払いの承認と確認
-- 利用可能額と請求額の確認
+## Directory Structure
 
-## ディレクトリ構成
+The system consists of three main servers: backend, frontend, and nginx, each with its respective directory.
 
-・backend、frontend、nginx の3つの主要なサーバから構成されていて、それらの名前を持つディレクトリ内でそれぞれのサーバを構築するファイルを用意しています。）
+1. Backend
+   - Dockerfile: Builds the Docker image for the backend application.
+   - app.py: Python script using Flask for the backend application.
+   - requirements.txt: List of Python package dependencies.
+2. Frontend
+   - build/: Contains static files generated from **`npm run build`**.
+   - node_modules/: Directory for installed project dependencies.
+   - public/index.html: Entry point HTML file for the application.
+   - src/: Contains React (JavaScript) source code, including `App.js`, `index.js`, `index.css`.
+   - Dockerfile: Configuration file to build the Docker image for the frontend.
+   - package-lock.json and package.json: Define project dependencies and scripts.
+3. Nginx
+   - default.conf: Nginx configuration file for reverse proxy settings.
+4. Docker Compose File
+   - Orchestration file.
+5. Other Files:
+   - composition.txt: File structure diagram.
 
-1. バックエンド
-- Dockerfile
-    - バックエンドアプリケーションのDockerイメージを構築
-- app.py
-    - FlaskなどのPythonフレームワークを使ったバックエンドアプリケーション用スクリプト
-- requirements.txt
-    - アプリケーションが依存するPythonパッケージのリスト
-1. フロントエンド
-- build/
-    - **`npm run build`**から生成された静的ファイル群
-- node_modules/
-    - プロジェクトの依存関係がインストールされるディレクトリ
-- public/index.html
-    - アプリケーションのエントリーポイントとなるHTMLファイル
-- src/: React（Java script）のソースコードが含まれていて、`App.js,index.js,index.css`
+## Setup Instructions
 
-があります。
-
-- Dockerfile
-    - フロントエンドのDockerイメージを構築するための設定ファイル
-- package-lock.json と package.json
-    - プロジェクトの依存関係やスクリプトの定義
-1. Nginx
-- default.conf
-    - Nginx の設定ファイルで、リバースプロキシの設定ファイル
-1. Docker Composeファイル
-    - オーケストレーションファイル
-2. その他のファイル:
-    - conposition.txt
-        - ファイル構成図
-
-## セットアップ方法
-
-1. リポジトリをクローンします。
+1. Clone the repository:
 
 ```bash
 git clone <https://github.com/your-username/your-repository-name.git>
 ```
 
-1. Dockerネットワークを作成
+2. Create a Docker network:
 
 ```bash
 docker network create nginx-network
 ```
 
-1. frontendディレクトリに移動
+3. Move to the frontend directory:
 
 ```bash
 cd frontend
 ```
 
-1. フロントエンド依存関係のインストール: フロントエンドディレクトリで **`npm install`** を実行
+4. Install frontend dependencies in the frontend directory:
 
 ```bash
-**npm install** 
+npm install
 ```
 
-1. Node.jsのTLS（Transport Layer Security）暗号ライブラリに関連する設定をする
+5. Set Node.js TLS (Transport Layer Security) cryptographic library related configurations:
 
 ```bash
 export NODE_OPTIONS=--openssl-legacy-provider
 ```
 
-1. アプリケーションのビルド:(frontendディレクトリ 内) 
+6. Build the application (inside frontend directory):
 
 ```bash
-**npm run build**
+npm run build
 ```
 
-1. 上位のディレクトリに移動
+7. Move to the upper directory:
 
 ```bash
 cd ..
 ```
 
-1. Docker Composeを使用してサービスを起動: プロジェクトのルートディレクトリで **`docker-compose up`** を実行。
+8. Launch services using Docker Compose in the project's root directory:
 
 ```bash
 docker-compose build --no-cache
-
-```
-
-1. Docker Composeを使用してサービスを起動: プロジェクトのルートディレクトリで **`docker-compose up`** を実行。
-
-```bash
 docker-compose up -d
 ```
 
-1. ブラウザで `http://localhost` にアクセスしてアプリケーションを使用します。
+9. Access the application by navigating to `http://localhost` in a browser.
 
-## 便利なコマンド
+## Useful Commands
 
-システム全体のDockerキャッシュを削除
+Delete all Docker cache system-wide:
 
 ```bash
 docker system prune --all --force
 ```
 
-設定したネットワークにコンテナが所属しているか確認
+Check containers in the configured network:
 
 ```bash
 docker network inspect nginx-network
 ```
 
-コンテナの状況確認
+Check container status:
 
 ```bash
 docker ps -a
 ```
 
-存在する全てのコンテナを停止
+Stop all existing containers:
 
 ```bash
 docker stop $(docker ps -aq) || true
 ```
 
-存在する全てのコンテナを削除
+Remove all existing containers:
 
 ```bash
 docker rm -f $(docker ps -aq) || true
 ```
 
-## 開発環境
+## Development Environment
 
-このプロジェクトは以下の環境で開発されています:
+This project is developed in the following environment:
 
-- **オペレーティングシステム**: macOS
+- **Operating System**: macOS
 - **Docker**:
-  - バージョン: 24.0.5
+  - Version: 24.0.5
 - **Docker Compose**:
-  - バージョン: 2.23.3
+  - Version: 2.23.3
 
-参考サイト
+References
 
-システム構築関連
+System Construction:
+[Building a Simple Development Environment Using Docker, React, Python, and FastAPI with Reverse Proxy](https://cloudsmith.co.jp/blog/virtualhost/docker/2022/12/2241971.html)
 
-[https://cloudsmith.co.jp/blog/virtualhost/docker/2022/12/2241971.html](https://cloudsmith.co.jp/blog/virtualhost/docker/2022/12/2241971.html)
-
-クレジットカード決済関連
-
-[https://www.saisoncard.co.jp/credictionary/knowledge/article045.html](https://www.saisoncard.co.jp/credictionary/knowledge/article045.html)[https://www.youtube.com/watch?v=rVrM8S7Rfdk](https://www.youtube.com/watch?v=rVrM8S7Rfdk)
-
-[https://www.youtube.com/watch?v=rVrM8S7Rfdk](https://www.youtube.com/watch?v=rVrM8S7Rfdk)
+Credit Card Payment:
+[Saison Card - Credit Card Payment Process](https://www.saisoncard.co.jp/credictionary/knowledge/article045.html)
+[YouTube - Credit Card Payment Explained](https://www.youtube.com/watch?v=rVrM8S7Rfdk)
